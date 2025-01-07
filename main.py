@@ -1,5 +1,4 @@
 from flask import Blueprint, Flask, render_template, send_from_directory
-import os
 main = Blueprint('main', __name__)
 
 @main.route('/')
