@@ -16,28 +16,30 @@ drive_service = build('drive', 'v3', credentials=credentials)
 def image_extraction():
     return render_template('image_extraction.html')
 
-@main.route('/download/<municipality>/<year>.tif')
+@main.route('/download/<municipality>/<year>')
 def download_file(municipality, year):
     try:
         # Paso 1: Encuentra la carpeta principal 'rasters'
         query = f"name='rasters' and mimeType='application/vnd.google-apps.folder' and trashed=false"
-        raster_folder_result = drive_service.files().list(q=query, fields="files(id)").execute()
+        raster_folder_result = drive_service.files().list(q=query, fields="files(id, name)").execute()
         raster_folders = raster_folder_result.get('files', [])
 
         if not raster_folders:
-            return jsonify({"error": "No se encontro la carpeta principal 'rasters'"}), 404
+            return jsonify({"error": "No se encontró la carpeta principal 'rasters'"}), 404
 
         raster_folder_id = raster_folders[0]['id']
+        print(f"Carpeta 'rasters' encontrada: {raster_folder_id}")
 
         # Paso 2: Encuentra la carpeta del municipio dentro de 'rasters'
         query = f"name='{municipality}' and mimeType='application/vnd.google-apps.folder' and trashed=false and '{raster_folder_id}' in parents"
-        folder_result = drive_service.files().list(q=query, fields="files(id)").execute()
+        folder_result = drive_service.files().list(q=query, fields="files(id, name)").execute()
         folders = folder_result.get('files', [])
 
         if not folders:
             return jsonify({"error": f"No se encontró la carpeta del municipio: {municipality} dentro de 'rasters'"}), 404
 
         folder_id = folders[0]['id']
+        print(f"Carpeta del municipio {municipality} encontrada: {folder_id}")
 
         # Paso 3: Encuentra el archivo dentro de la carpeta del municipio
         query = f"name='{year}.tif' and '{folder_id}' in parents and trashed=false"
@@ -48,6 +50,7 @@ def download_file(municipality, year):
             return jsonify({"error": f"No se encontró el archivo para el año: {year} en el municipio: {municipality}"}), 404
 
         file_id = files[0]['id']
+        print(f"Archivo {year}.tif encontrado: {file_id}")
 
         # Paso 4: Descarga el archivo
         request = drive_service.files().get_media(fileId=file_id)
@@ -59,7 +62,7 @@ def download_file(municipality, year):
             print(f"Descargando {int(status.progress() * 100)}%.")
 
         file_io.seek(0)
-        return send_file(file_io, as_attachment=True, download_name=f"{municipality}_{year}.tif", mimetype='image/tiff')
+        return send_file(file_io, as_attachment=True, download_name=f"{year}.tif", mimetype='image/tiff')
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
