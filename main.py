@@ -42,9 +42,12 @@ def download_file(municipality, year):
         print(f"Carpeta del municipio {municipality} encontrada: {folder_id}")
 
         # Paso 3: Encuentra el archivo dentro de la carpeta del municipio
+        print(f"Buscando archivo para el año: {year}.tif en la carpeta del municipio: {municipality}")
         query = f"name='{year}.tif' and '{folder_id}' in parents and trashed=false"
         file_result = drive_service.files().list(q=query, fields="files(id, name)").execute()
         files = file_result.get('files', [])
+        
+        print(f"Archivos encontrados: {files}")  # Esto te ayudará a ver los resultados de la búsqueda
 
         if not files:
             return jsonify({"error": f"No se encontró el archivo para el año: {year} en el municipio: {municipality}"}), 404
@@ -65,4 +68,5 @@ def download_file(municipality, year):
         return send_file(file_io, as_attachment=True, download_name=f"{year}.tif", mimetype='image/tiff')
 
     except Exception as e:
+        print(f"Error: {str(e)}")  # Imprime el error en caso de que ocurra
         return jsonify({"error": str(e)}), 500
