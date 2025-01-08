@@ -43,7 +43,7 @@ def download_file(municipality, year):
 
         # Paso 3: Encuentra el archivo dentro de la carpeta del municipio
         print(f"Buscando archivo para el año: {year}.tif en la carpeta del municipio: {municipality}")
-        query = f"name='{year}.tif' and '{folder_id}' in parents and trashed=false"
+        query = f"name='{year}' and '{folder_id}' in parents and trashed=false"
         file_result = drive_service.files().list(q=query, fields="files(id, name)").execute()
         files = file_result.get('files', [])
         
