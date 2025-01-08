@@ -60,7 +60,7 @@ def download_file(municipality, year):
             print(f"Descargando {int(status.progress() * 100)}%.")
 
         file_io.seek(0)
-        return send_file(file_io, as_attachment=True, download_name=f"{year}.tif", mimetype='image/tiff')
+        return send_file(file_io, as_attachment=True, download_name=f"{municipality}_{year}.tif", mimetype='image/tiff')
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
