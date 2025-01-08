@@ -16,7 +16,7 @@ drive_service = build('drive', 'v3', credentials=credentials)
 def image_extraction():
     return render_template('image_extraction.html')
 
-@main.route('/download/<municipality>/<year>')
+@main.route('/rasters/<municipality>/<year>')
 def download_file(municipality, year):
     try:
         # Paso 1: Encuentra la carpeta principal 'rasters'
