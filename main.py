@@ -7,7 +7,7 @@ main = Blueprint('main', __name__)
 
 # Configura las credenciales para la API de Google Drive
 SCOPES = ['https://www.googleapis.com/auth/drive']
-SERVICE_ACCOUNT_FILE = '/Users/jorgeandresjolahernandez/Desktop/Proyecto_Arauca/Automation_App/Image_Extraction/pelagic-gist-434920-h5-be83f4423969.json'
+SERVICE_ACCOUNT_FILE = './pelagic-gist-434920-h5-be83f4423969.json'
 
 credentials = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 drive_service = build('drive', 'v3', credentials=credentials)
