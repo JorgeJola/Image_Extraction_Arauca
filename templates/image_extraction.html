@@ -46,7 +46,7 @@
 
       // Update download link dynamically
       var downloadButton = document.getElementById("downloadBtn");
-      downloadButton.href = `{{ url_for('static', filename='') }}rasters/${municipality}/${year}.tif`;
+      downloadButton.href = `/download/${municipality}/${year}/raster.tif`;
   }
 </script>
 {% endblock %}
