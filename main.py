@@ -15,9 +15,8 @@ drive_service = build('drive', 'v3', credentials=credentials)
 @main.route('/')
 def image_extraction():
     return render_template('image_extraction.html')
-@main.route('/static/rasters/<municipality>/<year>.tif')
 
-@main.route('/download/<municipality>/<year>')
+@main.route('/download/<municipality>/<year>.tif')
 def download_file(municipality, year):
     try:
         # Paso 1: Encuentra la carpeta principal 'rasters'
@@ -26,7 +25,7 @@ def download_file(municipality, year):
         raster_folders = raster_folder_result.get('files', [])
 
         if not raster_folders:
-            return jsonify({"error": "No se encontró la carpeta principal 'rasters'"}), 404
+            return jsonify({"error": "No se encontro la carpeta principal 'rasters'"}), 404
 
         raster_folder_id = raster_folders[0]['id']
 
